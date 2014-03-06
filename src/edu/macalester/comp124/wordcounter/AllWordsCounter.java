@@ -15,9 +15,19 @@ public class AllWordsCounter {
 	// TODO: initialize instance variable to hold MAX_WORDS objects
     SingleWordCounter counters[];
 
+    public AllWordsCounter()
+    {
+        counters = new SingleWordCounter[MAX_WORDS];
+    }
+
     public int getNumWords() {
         // TODO: count the number of distinct words,
         // ie. the number of non-null counter objects.
+        for (int i = 0; i < MAX_WORDS; i++){
+            if (counters[i] == null)
+                return i;
+        }
+
         return -1;
     }
 	
@@ -31,10 +41,16 @@ public class AllWordsCounter {
         int n = getNumWords();
         for (int i = 0; i < n; i++) {
             // If you find the word increment the count and return
+            if (counters[i].wordMatches(word))
+            {
+                counters[i].incrementCount();
+                return;
+            }
         }
-
         // You didn't find the word. Add a new word counter to the array.
         // Don't forget to increment the word's count to get it to 1!
+        counters[n] = new SingleWordCounter(word);
+        counters[n].incrementCount();
 	}
 	
 	/**
@@ -44,9 +60,14 @@ public class AllWordsCounter {
 	 * @return
 	 */
 	public int getCount(String word) {
-        // TODO: pattern this after the count() function.
         // Make sure to return 0 for words you haven't seen before.
-        return -1;
+        int n = getNumWords();
+        for (int i = 0; i < n; i++)
+        {
+            if (counters[i].wordMatches(word))
+                return counters[i].getCount();
+        }
+        return 0;
 	}
 	
 	/**
@@ -56,9 +77,11 @@ public class AllWordsCounter {
 	public String []  getAllWords() {
         // part one: create an array of strings of size equal to the number of words
         int n = getNumWords();
-        String words[] = null;  // FIXME
+        String words[] = new String[n];
 
         // part two: fill the array of strings using a loop
+        for (int i = 0; i < n; i++)
+            words[i] = counters[i].getWord();
 
         return words;
 	}
